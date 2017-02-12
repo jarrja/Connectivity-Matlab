@@ -20,11 +20,12 @@ switch classType
         fclose(fileID);
 
         %If Data is from Baptist Hospital
-        columnRemove = [4,10,17];
-        disp('Data from Baptist Hospital, removing :4, 10, 17 column')
+        %columnRemove = [4,10,17];
+        %disp('Data from Baptist Hospital, removing :4, 10, 17 column')
         %If Data is from Miami Children's Hospital
-        % columnRemove = [5,6,15];
-        % disp('Data from Miami Childrens Hospital, removing :5, 6, 15 column')
+        
+        columnRemove = [5,6,15];
+        disp('Data from Miami Childrens Hospital, removing :5, 6, 15 column')
 
         count = 1;
         for i=8:1:29
@@ -33,7 +34,7 @@ switch classType
             else
                dataOutputMatrix(count,:) = transpose(tempData{i});
                count = count+1;
-            end  
+            end
         end
     case 'double'
         %File type is from mat file
@@ -42,6 +43,5 @@ switch classType
     otherwise
         error('Data type is not correct');
 end
-    
-end
 
+end

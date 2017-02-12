@@ -2,14 +2,24 @@ function eeg_connectivityPlot(object,plotMatrix,threshold,save,plotName)
     %Revised version of eegConnectivityPlot function which take too strict
     %argument. Requires object (will be updated for easy implementation)
     %plot matrix treshold and save option
-
+    
+    [~,n] = size(threshold);
+    
     fh = figure();
     %Edit for printing into folder
     %Create name of the folder
     if nargin < 5
         plotName = ['Pat',num2str(object.patientNumber),' Thres',num2str(threshold * 100)];
     end
-    plotMatrix(plotMatrix < threshold) = 0;
+    if n>1
+        % Fixe this inhibition and excitation
+        tempPlotMatrix = plotMatrix;
+        tempPlotMatrix(tempPlotMatrix > threshold(1)) = 0;
+        plotMatrix(plotMatrix < threshold(2)) = 0;
+        plotMatrix = plotMatrix+tempPlotMatrix;
+    else
+        plotMatrix(plotMatrix < threshold) = 0;
+    end
     eeg_wgPlot(plotMatrix,object.chanlocs,'vertexWeight',2,'edgeColorMap',jet,'edgeWidth',2);
     axis square;
     hold on;

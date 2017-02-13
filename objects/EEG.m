@@ -16,6 +16,7 @@ classdef EEG < handle
         trials
         event
         dataConnection
+        includeRemainRange
     end
     properties (Dependent)        
         pnts
@@ -96,22 +97,35 @@ classdef EEG < handle
                 end
 
         end
-        function eegSegmentation(obj)
+        function eegSegmentation(obj,rangeLeft)
+            % RangeLeft indicate that the rest of the segment (remaining)
+            % is included into the object
+            numSeg = obj.numberOfSegment;
+            if nargin >= 1 
+                numSeg = numSeg + 1;
+            end
             [~,numberOfFreqBand] = size(obj.dataFreqBand);
-            for i=1:1:obj.numberOfSegment
+            for i=1:1:numSeg
                 startNumber = ((i-1)*obj.segmentData+1);
                 stopNumber = startNumber + obj.segmentData - 1;
-                for j=1:1:numberOfFreqBand
-                    obj.dataFreqBandSegment{i}(:,:,j) = obj.dataFreqBand{j}(:,startNumber:stopNumber);
-                end
+
 %**********Frequency band segmentation needs work******
       
 %                  obj.dataFreqBandSegment{i}(:,:,1) = obj.dataFreqBand(:,startNumber:stopNumber,1);
 %                  obj.dataFreqBandSegment{i}(:,:,2) = obj.dataFreqBand(:,startNumber:stopNumber,2);
 %                  obj.dataFreqBandSegment{i}(:,:,3) = obj.dataFreqBand(:,startNumber:stopNumber,3);
-%                  obj.dataFreqBandSegment{i}(:,:,4) = obj.dataFreqBand(:,startNumber:stopNumber,4); 
-
-                 obj.dataSegment{i} = obj.data(:,startNumber:stopNumber);
+%                  obj.dataFreqBandSegment{i}(:,:,4) = obj.dataFreqBand(:,startNumber:stopNumber,4);
+                if nargin >=1 && i == numSeg
+                    for j=1:1:numberOfFreqBand
+                        obj.dataFreqBandSegment{i}(:,:,j) = obj.dataFreqBand{j}(:,startNumber:end);
+                    end
+                    obj.dataSegment{i} = obj.data(:,startNumber:end);
+                else
+                    for j=1:1:numberOfFreqBand
+                        obj.dataFreqBandSegment{i}(:,:,j) = obj.dataFreqBand{j}(:,startNumber:stopNumber);
+                    end
+                    obj.dataSegment{i} = obj.data(:,startNumber:stopNumber);
+                end
             end            
         end
         

@@ -33,7 +33,7 @@ classdef EEG < handle
             obj.data = eeg_readData(fileName);
             %Assign Sampling Frequency
             obj.srate = Fs;
-            %Assign Frequency Band
+            %Assign Default Frequency Band
             obj.frequencyBand = {'Delta','Theta','Alpha','Beta'};
             %Assign location of the electrodes
             [obj.chanlocs, obj.electrodeName]=eeg_readLocation(locationName);
@@ -41,6 +41,8 @@ classdef EEG < handle
             %Assgin range of segment in second
             obj.segmentRange = rangeSeg;
             obj.segmentData = obj.segmentRange*Fs;
+            %Set Include remaining range to false as default
+            obj.includeRemainRange = false;
             
             %Create to match EEGLAB template
             obj.trials = 1;
@@ -59,6 +61,9 @@ classdef EEG < handle
         function NumberOfSegment = get.numberOfSegment(obj)
             rangeLeft = mod(obj.totalRange,obj.segmentRange);
             NumberOfSegment = (obj.totalRange-rangeLeft)/obj.segmentRange;
+            %If include remain range, add one range left
+            NumberOfSegment = NumberOfSegment+obj.includeRemainRange;
+            
         end
         
         function eegDataFreqBand(obj,range)
@@ -103,6 +108,7 @@ classdef EEG < handle
             numSeg = obj.numberOfSegment;
             if nargin >= 1 
                 numSeg = numSeg + 1;
+                obj.includeRemainRange = true;
             end
             [~,numberOfFreqBand] = size(obj.dataFreqBand);
             for i=1:1:numSeg

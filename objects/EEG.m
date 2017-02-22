@@ -17,6 +17,7 @@ classdef EEG < handle
         event
         dataConnection
         includeRemainRange
+        numConnection
     end
     properties (Dependent)        
         pnts

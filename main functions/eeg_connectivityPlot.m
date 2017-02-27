@@ -47,7 +47,7 @@ function eeg_connectivityPlot(object,plotMatrix,threshold,save,plotName)
     if nargin >3 && save == 1
         % Test for rotating the image when saving
 %         set( fh,'PaperPosition', [0.01 0.01 7.0 7.0] );
-        set( fh,'PaperSize',fliplr(get(hf,'PaperSize')),'PaperPosition', [0.01 0.01 7.0 7.0] ) ;
+        set( fh,'PaperSize',fliplr(get(fh,'PaperSize')),'PaperPosition', [0.01 0.01 7.0 7.0] ) ;
         print(plotName,'-dpng','-r0');
     end
     
